@@ -33,9 +33,9 @@ func getColor(colorstr string) (color.RGBA, error) {
 }
 
 // renderImage renders an image of specified size.
-func renderImage(width int, height int, color *color.RGBA) image.Image {
+func renderImage(width int, height int, bgcolor *color.RGBA, fgcolor *color.RGBA) image.Image {
 	canvas := image.NewRGBA(image.Rect(0, 0, width, height))
-	draw.Draw(canvas, canvas.Bounds(), &image.Uniform{color}, image.ZP, draw.Src)
+	draw.Draw(canvas, canvas.Bounds(), &image.Uniform{bgcolor}, image.ZP, draw.Src)
 	var img image.Image = canvas
 	return img
 }
@@ -68,9 +68,14 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 	}
 	bgcolor, err := getColor(r.URL.Query().Get("bgcolor"))
 	if err != nil {
-		http.Error(w, "Invalid color", http.StatusBadRequest)
+		http.Error(w, "Invalid background color", http.StatusBadRequest)
 		return
 	}
-	img := renderImage(width, height, &bgcolor)
+	fgcolor, err := getColor(r.URL.Query().Get("fgcolor"))
+	if err != nil {
+		http.Error(w, "Invalid foreground color", http.StatusBadRequest)
+		return
+	}
+	img := renderImage(width, height, &bgcolor, &fgcolor)
 	writeImage(w, &img)
 }
