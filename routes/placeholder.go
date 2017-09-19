@@ -30,10 +30,9 @@ func writeImage(w http.ResponseWriter, img *image.Image) {
 }
 
 // renderImage renders an image of specified size.
-func renderImage(width int, height int) image.Image {
+func renderImage(width int, height int, color *color.RGBA) image.Image {
 	m := image.NewRGBA(image.Rect(0, 0, width, height))
-	blue := color.RGBA{0, 0, 255, 255}
-	draw.Draw(m, m.Bounds(), &image.Uniform{blue}, image.ZP, draw.Src)
+	draw.Draw(m, m.Bounds(), &image.Uniform{color}, image.ZP, draw.Src)
 
 	var img image.Image = m
 	return img
@@ -47,12 +46,15 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid image width", http.StatusBadRequest)
 		return
 	}
+
 	height, err := strconv.Atoi(r.URL.Query().Get("height"))
 	if err != nil {
 		http.Error(w, "Invalid image height", http.StatusBadRequest)
 		return
 	}
 
-	img := renderImage(width, height)
+	bgcolor := color.RGBA{0, 0, 255, 255}
+
+	img := renderImage(width, height, &bgcolor)
 	writeImage(w, &img)
 }
