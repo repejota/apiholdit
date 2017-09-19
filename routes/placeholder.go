@@ -29,12 +29,30 @@ func writeImage(w http.ResponseWriter, img *image.Image) {
 	}
 }
 
-// PlaceHolder generates an image placeholder.
-func PlaceHolder(w http.ResponseWriter, r *http.Request) {
-	m := image.NewRGBA(image.Rect(0, 0, 240, 240))
+// renderImage renders an image of specified size.
+func renderImage(width int, height int) image.Image {
+	m := image.NewRGBA(image.Rect(0, 0, width, height))
 	blue := color.RGBA{0, 0, 255, 255}
 	draw.Draw(m, m.Bounds(), &image.Uniform{blue}, image.ZP, draw.Src)
 
 	var img image.Image = m
+	return img
+}
+
+// PlaceHolder generates an image placeholder.
+func PlaceHolder(w http.ResponseWriter, r *http.Request) {
+
+	width, err := strconv.Atoi(r.URL.Query().Get("width"))
+	if err != nil {
+		http.Error(w, "Invalid image width", http.StatusBadRequest)
+		return
+	}
+	height, err := strconv.Atoi(r.URL.Query().Get("height"))
+	if err != nil {
+		http.Error(w, "Invalid image height", http.StatusBadRequest)
+		return
+	}
+
+	img := renderImage(width, height)
 	writeImage(w, &img)
 }
