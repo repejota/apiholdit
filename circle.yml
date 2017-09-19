@@ -25,5 +25,5 @@ jobs:
       - run: go get -v -t -d ./...
       - run: go test -v ./...
       - run: go get -u github.com/mattn/goveralls
-      - run: go test -v -cover -race -coverprofile=./coverage.out
-      - run: goveralls -coverprofile=./coverage.out -service=circle-ci -repotoken=XUZEiWNQkmOdSKNL7ygJplYTaaMHx9QwF
+      - run: go test -v -cover -race -coverprofile=/go/src/github.com/repejota/apiholdit/coverage.out
+      - run: goveralls -coverprofile=/go/src/github.com/repejota/apiholdit/coverage.out -service=circle-ci -repotoken=XUZEiWNQkmOdSKNL7ygJplYTaaMHx9QwF
