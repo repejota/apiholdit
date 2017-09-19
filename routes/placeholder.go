@@ -4,6 +4,7 @@ package routes
 
 import (
 	"bytes"
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -38,6 +39,26 @@ func renderImage(width int, height int, color *color.RGBA) image.Image {
 	return img
 }
 
+// getColor gets a color from a RGB HTML hex string.
+func getColor(colorstr string) (color.RGBA, error) {
+	fmt.Println(colorstr)
+
+	var col color.RGBA
+	format := "%02x%02x%02x"
+	var r, g, b uint8
+	n, err := fmt.Sscanf(colorstr, format, &r, &g, &b)
+	if err != nil {
+		col = color.RGBA{0, 0, 0, 255}
+		return col, err
+	}
+	if n != 3 {
+		col = color.RGBA{0, 0, 0, 255}
+		return col, fmt.Errorf("color: %v is not a hex-color", colorstr)
+	}
+	col = color.RGBA{r, g, b, 255}
+	return col, nil
+}
+
 // PlaceHolder generates an image placeholder.
 func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 
@@ -53,7 +74,11 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bgcolor := color.RGBA{0, 0, 255, 255}
+	bgcolor, err := getColor(r.URL.Query().Get("bgcolor"))
+	if err != nil {
+		http.Error(w, "Invalid color", http.StatusBadRequest)
+		return
+	}
 
 	img := renderImage(width, height, &bgcolor)
 	writeImage(w, &img)
