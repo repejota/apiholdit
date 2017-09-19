@@ -41,8 +41,17 @@ func renderImage(width int, height int) image.Image {
 
 // PlaceHolder generates an image placeholder.
 func PlaceHolder(w http.ResponseWriter, r *http.Request) {
-	width := 640
-	height := 480
+
+	width, err := strconv.Atoi(r.URL.Query().Get("width"))
+	if err != nil {
+		http.Error(w, "Invalid image width", http.StatusBadRequest)
+		return
+	}
+	height, err := strconv.Atoi(r.URL.Query().Get("height"))
+	if err != nil {
+		http.Error(w, "Invalid image height", http.StatusBadRequest)
+		return
+	}
 
 	img := renderImage(width, height)
 	writeImage(w, &img)
