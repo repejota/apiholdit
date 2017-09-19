@@ -13,6 +13,7 @@ import (
 func Start(address string, port string) {
 
 	http.HandleFunc("/teapot", routes.TeaPot)
+	http.HandleFunc("/i", routes.PlaceHolder)
 
 	// Start server
 	serveraddress := fmt.Sprintf("%s:%s", address, port)
