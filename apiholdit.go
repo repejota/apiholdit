@@ -50,7 +50,9 @@ func (p *PlaceHolder) SetFgColor(fgcolor string) error {
 
 // Render ...
 func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
-	draw.Draw(p.Canvas, p.Canvas.Bounds(), &image.Uniform{p.BackgroundColor}, image.ZP, draw.Src)
+	rectangle := p.Canvas.Bounds()
+	bgcolor := &image.Uniform{p.BackgroundColor}
+	draw.Draw(p.Canvas, rectangle, bgcolor, image.ZP, draw.Src)
 
 	buffer := new(bytes.Buffer)
 	err := png.Encode(buffer, p.Canvas)
