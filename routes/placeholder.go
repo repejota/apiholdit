@@ -35,6 +35,16 @@ func getColor(colorstr string) (color.RGBA, error) {
 // renderImage renders an image of specified size.
 func renderImage(width int, height int, bgcolor *color.RGBA, fgcolor *color.RGBA) image.Image {
 	canvas := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	/*
+		c := freetype.NewContext()
+		c.SetDPI(apiholdit.DPI)
+		c.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
+		c.SetDst(canvas)
+		c.SetClip(canvas.Bounds())
+		c.SetHinting(font.HintingNone)
+	*/
+
 	draw.Draw(canvas, canvas.Bounds(), &image.Uniform{bgcolor}, image.ZP, draw.Src)
 	var img image.Image = canvas
 	return img
