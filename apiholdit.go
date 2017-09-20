@@ -3,10 +3,12 @@
 package apiholdit
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
+	"image/png"
 )
 
 // PlaceHolder ...
@@ -22,29 +24,6 @@ func NewPlaceHolder(width int, height int) *PlaceHolder {
 	rectangle := image.Rect(0, 0, width, height)
 	p.Canvas = image.NewRGBA(rectangle)
 	return &p
-}
-
-// Render ...
-func (p *PlaceHolder) Render() {
-	draw.Draw(p.Canvas, p.Canvas.Bounds(), &image.Uniform{p.BackgroundColor}, image.ZP, draw.Src)
-}
-
-// getColor gets a color from a RGB HTML hex string.
-func (p *PlaceHolder) getColor(colorstr string) (color.RGBA, error) {
-	var col color.RGBA
-	format := "%02x%02x%02x"
-	var r, g, b uint8
-	n, err := fmt.Sscanf(colorstr, format, &r, &g, &b)
-	if err != nil {
-		col = color.RGBA{0, 0, 0, 255}
-		return col, err
-	}
-	if n != 3 {
-		col = color.RGBA{0, 0, 0, 255}
-		return col, fmt.Errorf("color: %v is not a hex-color", colorstr)
-	}
-	col = color.RGBA{r, g, b, 255}
-	return col, nil
 }
 
 // SetBgColor ...
@@ -67,4 +46,34 @@ func (p *PlaceHolder) SetFgColor(fgcolor string) error {
 	}
 	p.ForegroundColor = &col
 	return nil
+}
+
+// Render ...
+func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
+	draw.Draw(p.Canvas, p.Canvas.Bounds(), &image.Uniform{p.BackgroundColor}, image.ZP, draw.Src)
+
+	buffer := new(bytes.Buffer)
+	err := png.Encode(buffer, p.Canvas)
+	if err != nil {
+		return buffer, nil
+	}
+	return buffer, err
+}
+
+// getColor gets a color from a RGB HTML hex string.
+func (p *PlaceHolder) getColor(colorstr string) (color.RGBA, error) {
+	var col color.RGBA
+	format := "%02x%02x%02x"
+	var r, g, b uint8
+	n, err := fmt.Sscanf(colorstr, format, &r, &g, &b)
+	if err != nil {
+		col = color.RGBA{0, 0, 0, 255}
+		return col, err
+	}
+	if n != 3 {
+		col = color.RGBA{0, 0, 0, 255}
+		return col, fmt.Errorf("color: %v is not a hex-color", colorstr)
+	}
+	col = color.RGBA{r, g, b, 255}
+	return col, nil
 }
