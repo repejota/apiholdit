@@ -5,8 +5,6 @@ package routes
 import (
 	"bytes"
 	"image"
-	"image/color"
-	"image/draw"
 	"image/png"
 	"log"
 	"net/http"
@@ -14,14 +12,6 @@ import (
 
 	"github.com/repejota/apiholdit"
 )
-
-// renderImage renders an image of specified size.
-func renderImage(width int, height int, bgcolor *color.RGBA, fgcolor *color.RGBA) image.Image {
-	canvas := image.NewRGBA(image.Rect(0, 0, width, height))
-	draw.Draw(canvas, canvas.Bounds(), &image.Uniform{bgcolor}, image.ZP, draw.Src)
-	var img image.Image = canvas
-	return img
-}
 
 // writeImage encodes an image 'img' in PNG format and writes it
 // into ResponseWriter.
@@ -39,8 +29,6 @@ func writeImage(w http.ResponseWriter, img *image.Image) {
 
 // PlaceHolder generates an image placeholder.
 func PlaceHolder(w http.ResponseWriter, r *http.Request) {
-	p := apiholdit.PlaceHolder{}
-
 	width, err := strconv.Atoi(r.URL.Query().Get("width"))
 	if err != nil {
 		http.Error(w, "Invalid image width", http.StatusBadRequest)
@@ -52,17 +40,21 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bgcolor, err := p.SetBgColor(r.URL.Query().Get("bgcolor"))
+	p := apiholdit.NewPlaceHolder(width, height)
+
+	err = p.SetBgColor(r.URL.Query().Get("bgcolor"))
 	if err != nil {
 		http.Error(w, "Invalid background color", http.StatusBadRequest)
 		return
 	}
-	fgcolor, err := p.SetFgColor(r.URL.Query().Get("fgcolor"))
+	err = p.SetFgColor(r.URL.Query().Get("fgcolor"))
 	if err != nil {
 		http.Error(w, "Invalid foreground color", http.StatusBadRequest)
 		return
 	}
 
-	img := renderImage(width, height, &bgcolor, &fgcolor)
+	p.Render()
+	var img image.Image
+	img = p.Canvas
 	writeImage(w, &img)
 }
