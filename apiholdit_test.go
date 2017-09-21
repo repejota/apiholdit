@@ -30,3 +30,20 @@ func TestSetBgColor(t *testing.T) {
 		t.Fatalf("Placeholder background color A expected to be 255 but got %d", placeholder.BackgroundColor.A)
 	}
 }
+
+func TestSetFgColor(t *testing.T) {
+	placeholder := NewPlaceHolder(640, 480)
+	placeholder.SetFgColor("00ffff")
+	if placeholder.ForegroundColor.R != 0 {
+		t.Fatalf("Placeholder foreground color R expected to be 0 but got %d", placeholder.ForegroundColor.R)
+	}
+	if placeholder.ForegroundColor.G != 255 {
+		t.Fatalf("Placeholder foreground color R expected to be 255 but got %d", placeholder.ForegroundColor.G)
+	}
+	if placeholder.ForegroundColor.B != 255 {
+		t.Fatalf("Placeholder foreground color R expected to be 255 but got %d", placeholder.ForegroundColor.B)
+	}
+	if placeholder.ForegroundColor.A != 255 {
+		t.Fatalf("Placeholder foreground color A expected to be 255 but got %d", placeholder.ForegroundColor.A)
+	}
+}
