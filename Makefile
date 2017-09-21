@@ -49,7 +49,8 @@ lint:
 # Dependencies
 
 deps:
-
+	go get -u golang.org/x/image/font
+	go get -u github.com/golang/freetype
 
 dev-deps:
 	go get -u github.com/alecthomas/gometalinter
