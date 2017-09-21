@@ -9,4 +9,7 @@ const (
 	// DefaultServerPort is the default port number where the server is going to
 	// be started and listening.
 	DefaultServerPort = "8080"
+
+	// DPI ...
+	DPI = 72.00
 )
