@@ -83,7 +83,7 @@ func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
 	c.SetClip(rectangle)
 	c.SetHinting(font.HintingNone)
 
-	text := "foo bar"
+	text := "Lorem ipsum dolor sit amet."
 
 	// draw with scaled fontsize to get the real text extent
 	fontsize, actwidth := maxPointSize(text, c,
