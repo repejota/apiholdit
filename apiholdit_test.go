@@ -13,3 +13,11 @@ func TestNewPlaceHolder(t *testing.T) {
 		t.Fatalf("Placeholder height expected to be 480 but got %d", placeholder.Height)
 	}
 }
+
+func TestSetBgColort(t *testing.T) {
+	placeholder := NewPlaceHolder(640, 480)
+	placeholder.SetBgColor("ff0000")
+	if placeholder.BackgroundColor.R != 255 {
+		t.Fatalf("Placeholder background color R expected to be 255 but got %d", placeholder.BackgroundColor.R)
+	}
+}
