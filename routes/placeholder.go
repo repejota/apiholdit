@@ -14,18 +14,20 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 	p := apiholdit.NewPlaceHolder()
 
 	widthstr := r.URL.Query().Get("width")
-	_, err := strconv.Atoi(widthstr)
+	width, err := strconv.Atoi(widthstr)
 	if err != nil {
 		http.Error(w, "Invalid placeholder width", http.StatusBadRequest)
 		return
 	}
+	p.SetWidth(uint(width))
 
 	heightstr := r.URL.Query().Get("height")
-	_, err = strconv.Atoi(heightstr)
+	height, err := strconv.Atoi(heightstr)
 	if err != nil {
 		http.Error(w, "Invalid placeholder height", http.StatusBadRequest)
 		return
 	}
+	p.SetHeight(uint(height))
 
 	bgcolorstr := r.URL.Query().Get("bgcolor")
 	err = p.SetBackgroundColor(bgcolorstr)

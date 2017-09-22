@@ -41,12 +41,16 @@ func NewPlaceHolder() *PlaceHolder {
 // SetWidth ...
 func (p *PlaceHolder) SetWidth(width uint) error {
 	p.Width = width
+	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
+	p.Canvas = image.NewRGBA(rectangle)
 	return nil
 }
 
 // SetHeight ...
 func (p *PlaceHolder) SetHeight(height uint) error {
 	p.Height = height
+	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
+	p.Canvas = image.NewRGBA(rectangle)
 	return nil
 }
 
