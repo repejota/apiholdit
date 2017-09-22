@@ -7,6 +7,7 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"image/gif"
 	"image/jpeg"
 	"image/png"
 
@@ -98,10 +99,19 @@ func (p *PlaceHolder) EncodePNG() (*bytes.Buffer, error) {
 	return buffer, err
 }
 
-// EncodeJPEG ...
-func (p *PlaceHolder) EncodeJPEG(quality int) (*bytes.Buffer, error) {
+// EncodeGIF ...
+func (p *PlaceHolder) EncodeGIF(options *gif.Options) (*bytes.Buffer, error) {
 	buffer := new(bytes.Buffer)
-	options := &jpeg.Options{Quality: quality}
+	err := gif.Encode(buffer, p.Canvas, options)
+	if err != nil {
+		return buffer, nil
+	}
+	return buffer, err
+}
+
+// EncodeJPEG ...
+func (p *PlaceHolder) EncodeJPEG(options *jpeg.Options) (*bytes.Buffer, error) {
+	buffer := new(bytes.Buffer)
 	err := jpeg.Encode(buffer, p.Canvas, options)
 	if err != nil {
 		return buffer, nil
