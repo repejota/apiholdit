@@ -29,16 +29,16 @@ type PlaceHolder struct {
 
 // NewPlaceHolder ...
 func NewPlaceHolder() *PlaceHolder {
-	p := PlaceHolder{}
-	p.Width = DefaultWidth
-	p.Height = DefaultHeight
-	p.MarginRatio = DefaultMarginRatio
-	rectangle := image.Rect(0, 0, DefaultWidth, DefaultHeight)
-	p.Canvas = image.NewRGBA(rectangle)
-	return &p
+	placeholder := PlaceHolder{
+		Width:       DefaultWidth,
+		Height:      DefaultHeight,
+		MarginRatio: DefaultMarginRatio,
+	}
+	return &placeholder
 }
 
-// SetWidth ...
+// SetWidth sets the width of the placeholder and regenerates the canvas with
+// the new size.
 func (p *PlaceHolder) SetWidth(width uint) error {
 	p.Width = width
 	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
@@ -46,7 +46,8 @@ func (p *PlaceHolder) SetWidth(width uint) error {
 	return nil
 }
 
-// SetHeight ...
+// SetHeight sets the height of the placeholder and regenerates the canvas with
+// the new size.
 func (p *PlaceHolder) SetHeight(height uint) error {
 	p.Height = height
 	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
@@ -84,6 +85,9 @@ func (p *PlaceHolder) SetText(text string) error {
 
 // Render ...
 func (p *PlaceHolder) Render() error {
+	rectangle := image.Rect(0, 0, DefaultWidth, DefaultHeight)
+	p.Canvas = image.NewRGBA(rectangle)
+
 	// Render background
 	err := renderBackground(p.Canvas, p.BackgroundColor)
 	if err != nil {
