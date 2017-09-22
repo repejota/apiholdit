@@ -111,24 +111,23 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
 	rectangle := canvas.Bounds()
 
-	c := freetype.NewContext()
-	c.SetDPI(DefaultDPI)
-	c.SetFont(fontTTF)
-	c.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
-	c.SetDst(canvas)
-	c.SetClip(rectangle)
-	c.SetHinting(font.HintingNone)
+	context := freetype.NewContext()
+	context.SetDPI(DefaultDPI)
+	context.SetFont(fontTTF)
+	context.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
+	context.SetDst(canvas)
+	context.SetClip(rectangle)
+	context.SetHinting(font.HintingNone)
 
-	// draw with scaled fontsize to get the real text extent
-	scaledWidth, scaledHeight := getFontScaledSize(width, height, marginratio)
-	scaledFontSize, finalWidth, finalHeight := maxPointSize(text, c, scaledWidth, scaledHeight)
-	xCenter := (float64(width) / 2.0) - (float64(finalWidth) / 2.0)
-	yCenter := (float64(height) / 2.0) + (float64(finalHeight) / 2.0)
+	// calculate final font size and coordinates to draw
+	finalFontSize, finalWidth, finalHeight := getFontFinalSize(text, context, width, height, marginratio)
+	context.SetFontSize(finalFontSize)
 
 	// draw the text
-	c.SetFontSize(scaledFontSize)
-	c.SetSrc(image.NewUniform(fgcolor))
-	_, err := c.DrawString(text, freetype.Pt(int(xCenter), int(yCenter)))
+	context.SetSrc(image.NewUniform(fgcolor))
+	xCenter := (float64(width) / 2.0) - (float64(finalWidth) / 2.0)
+	yCenter := (float64(height) / 2.0) + (float64(finalHeight) / 2.0)
+	_, err := context.DrawString(text, freetype.Pt(int(xCenter), int(yCenter)))
 	if err != nil {
 		return err
 	}
@@ -153,13 +152,6 @@ func getFont() (*truetype.Font, error) {
 	return fontTTF, nil
 }
 
-// getFontScaledSize ...
-func getFontScaledSize(width int, height int, marginratio float64) (int, int) {
-	scaledWidth := int(float64(width) * (1.0 - marginratio))
-	scaledHeight := int(float64(height) * (1.0 - marginratio))
-	return scaledWidth, scaledHeight
-}
-
 // getColor gets a color from a RGB HTML hex string.
 func getColor(colorstr string) (color.RGBA, error) {
 	var col color.RGBA
@@ -180,27 +172,32 @@ func getColor(colorstr string) (color.RGBA, error) {
 
 // maxPointSize returns the maximum point size we can use to fit text inside
 // width and height as well as the resulting text-width in pixels
-func maxPointSize(text string, c *freetype.Context, width, height int) (float64, int, int) {
-	// never let the font size exceed the requested height
-	fontsize := 512.00
-	for int(c.PointToFixed(fontsize)/64) > height {
-		fontsize -= 2
-	}
+func getFontFinalSize(text string, c *freetype.Context, width int, height int, marginratio float64) (float64, int, int) {
+	scaledWidth, scaledHeight := getFontScaledSize(width, height, marginratio)
+
+	finalFontSize := DefaultMaxFontSize
 
 	// find the biggest matching font size for the requested width
-	var actwidth int
-	for actwidth = width + 1; actwidth > width; fontsize -= 2 {
-		c.SetFontSize(fontsize)
-
+	for int(c.PointToFixed(finalFontSize)/64) > scaledHeight {
+		finalFontSize -= 2
+	}
+	var finalWidth int
+	for finalWidth = width + 1; finalWidth > scaledWidth; finalFontSize -= 2 {
+		c.SetFontSize(finalFontSize)
 		textExtent, err := c.DrawString(text, freetype.Pt(0, 0))
 		if err != nil {
 			return 0, 0, 0
 		}
-
-		actwidth = int(float64(textExtent.X) / 64)
+		finalWidth = int(float64(textExtent.X) / 64)
 	}
+	finalHeight := int(c.PointToFixed(finalFontSize/2.0) / 64)
 
-	actheight := int(c.PointToFixed(fontsize/2.0) / 64)
+	return finalFontSize, finalWidth, finalHeight
+}
 
-	return fontsize, actwidth, actheight
+// getFontScaledSize ...
+func getFontScaledSize(width int, height int, marginratio float64) (int, int) {
+	scaledWidth := int(float64(width) * (1.0 - marginratio))
+	scaledHeight := int(float64(height) * (1.0 - marginratio))
+	return scaledWidth, scaledHeight
 }

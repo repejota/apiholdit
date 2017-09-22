@@ -16,4 +16,7 @@ const (
 
 	// DefaultMarginRatio ...
 	DefaultMarginRatio = 0.2
+
+	// DefaultMaxFontSize ...
+	DefaultMaxFontSize = 512.00
 )
