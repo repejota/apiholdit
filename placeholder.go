@@ -18,8 +18,8 @@ import (
 
 // PlaceHolder ...
 type PlaceHolder struct {
-	Width           int
-	Height          int
+	Width           uint
+	Height          uint
 	MarginRatio     float64
 	BackgroundColor *color.RGBA
 	ForegroundColor *color.RGBA
@@ -36,6 +36,18 @@ func NewPlaceHolder() *PlaceHolder {
 	rectangle := image.Rect(0, 0, DefaultWidth, DefaultHeight)
 	p.Canvas = image.NewRGBA(rectangle)
 	return &p
+}
+
+// SetWidth ...
+func (p *PlaceHolder) SetWidth(width uint) error {
+	p.Width = width
+	return nil
+}
+
+// SetHeight ...
+func (p *PlaceHolder) SetHeight(height uint) error {
+	p.Height = height
+	return nil
 }
 
 // SetBackgroundColor ...
@@ -128,7 +140,7 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 }
 
 // renderText ...
-func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
+func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width uint, height uint, marginratio float64, text string, fgcolor *color.RGBA) error {
 	rectangle := canvas.Bounds()
 
 	context := freetype.NewContext()
