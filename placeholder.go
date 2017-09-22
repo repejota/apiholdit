@@ -28,12 +28,12 @@ type PlaceHolder struct {
 }
 
 // NewPlaceHolder ...
-func NewPlaceHolder(width int, height int) *PlaceHolder {
+func NewPlaceHolder() *PlaceHolder {
 	p := PlaceHolder{}
-	p.Width = width
-	p.Height = height
+	p.Width = DefaultWidth
+	p.Height = DefaultHeight
 	p.MarginRatio = DefaultMarginRatio
-	rectangle := image.Rect(0, 0, width, height)
+	rectangle := image.Rect(0, 0, DefaultWidth, DefaultHeight)
 	p.Canvas = image.NewRGBA(rectangle)
 	return &p
 }
