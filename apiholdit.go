@@ -4,12 +4,11 @@ package apiholdit
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
+	"image/jpeg"
 	"image/png"
-	"io/ioutil"
 
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
@@ -99,6 +98,17 @@ func (p *PlaceHolder) EncodePNG() (*bytes.Buffer, error) {
 	return buffer, err
 }
 
+// EncodeJPEG ...
+func (p *PlaceHolder) EncodeJPEG(quality int) (*bytes.Buffer, error) {
+	buffer := new(bytes.Buffer)
+	options := &jpeg.Options{Quality: quality}
+	err := jpeg.Encode(buffer, p.Canvas, options)
+	if err != nil {
+		return buffer, nil
+	}
+	return buffer, err
+}
+
 // renderBackground ...
 func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 	rectangle := canvas.Bounds()
@@ -133,71 +143,4 @@ func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height in
 	}
 
 	return nil
-}
-
-// getFont ...
-func getFont() (*truetype.Font, error) {
-	fontPath := "/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf"
-
-	ttf, err := ioutil.ReadFile(fontPath)
-	if err != nil {
-		return nil, err
-	}
-
-	fontTTF, err := freetype.ParseFont(ttf)
-	if err != nil {
-		return nil, err
-	}
-
-	return fontTTF, nil
-}
-
-// getColor gets a color from a RGB HTML hex string.
-func getColor(colorstr string) (color.RGBA, error) {
-	var col color.RGBA
-	format := "%02x%02x%02x"
-	var r, g, b uint8
-	n, err := fmt.Sscanf(colorstr, format, &r, &g, &b)
-	if err != nil {
-		col = color.RGBA{0, 0, 0, 255}
-		return col, err
-	}
-	if n != 3 {
-		col = color.RGBA{0, 0, 0, 255}
-		return col, fmt.Errorf("color: %v is not a hex-color", colorstr)
-	}
-	col = color.RGBA{r, g, b, 255}
-	return col, nil
-}
-
-// maxPointSize returns the maximum point size we can use to fit text inside
-// width and height as well as the resulting text-width in pixels
-func getFontFinalSize(text string, c *freetype.Context, width int, height int, marginratio float64) (float64, int, int) {
-	scaledWidth, scaledHeight := getFontScaledSize(width, height, marginratio)
-
-	finalFontSize := DefaultMaxFontSize
-
-	// find the biggest matching font size for the requested width
-	for int(c.PointToFixed(finalFontSize)/64) > scaledHeight {
-		finalFontSize -= 2
-	}
-	var finalWidth int
-	for finalWidth = width + 1; finalWidth > scaledWidth; finalFontSize -= 2 {
-		c.SetFontSize(finalFontSize)
-		textExtent, err := c.DrawString(text, freetype.Pt(0, 0))
-		if err != nil {
-			return 0, 0, 0
-		}
-		finalWidth = int(float64(textExtent.X) / 64)
-	}
-	finalHeight := int(c.PointToFixed(finalFontSize/2.0) / 64)
-
-	return finalFontSize, finalWidth, finalHeight
-}
-
-// getFontScaledSize ...
-func getFontScaledSize(width int, height int, marginratio float64) (int, int) {
-	scaledWidth := int(float64(width) * (1.0 - marginratio))
-	scaledHeight := int(float64(height) * (1.0 - marginratio))
-	return scaledWidth, scaledHeight
 }
