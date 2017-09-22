@@ -13,4 +13,7 @@ const (
 
 	// DefaultDPI ...
 	DefaultDPI = 72.00
+
+	// DefaultMarginRatio ...
+	DefaultMarginRatio = 0.2
 )

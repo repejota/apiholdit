@@ -32,7 +32,7 @@ func NewPlaceHolder(width int, height int) *PlaceHolder {
 	p := PlaceHolder{}
 	p.Width = width
 	p.Height = height
-	p.MarginRatio = 0.2
+	p.MarginRatio = DefaultMarginRatio
 	rectangle := image.Rect(0, 0, width, height)
 	p.Canvas = image.NewRGBA(rectangle)
 	return &p
