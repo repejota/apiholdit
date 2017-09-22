@@ -110,6 +110,7 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 // renderText ...
 func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
 	rectangle := canvas.Bounds()
+
 	c := freetype.NewContext()
 	c.SetDPI(DefaultDPI)
 	c.SetFont(fontTTF)
@@ -119,18 +120,16 @@ func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height in
 	c.SetHinting(font.HintingNone)
 
 	// draw with scaled fontsize to get the real text extent
-	fontsize, actwidth := maxPointSize(text, c,
-		int(float64(width)*(1.0-marginratio)),
-		int(float64(height)*(1.0-marginratio)))
-
-	actheight := c.PointToFixed(fontsize/2.0) / 64
-	xcenter := (float64(width) / 2.0) - (float64(actwidth) / 2.0)
-	ycenter := (float64(height) / 2.0) + (float64(actheight) / 2.0)
+	scaledWidth := int(float64(width) * (1.0 - marginratio))
+	scaledHeight := int(float64(height) * (1.0 - marginratio))
+	scaledFontSize, finalWidth, finalHeight := maxPointSize(text, c, scaledWidth, scaledHeight)
+	xCenter := (float64(width) / 2.0) - (float64(finalWidth) / 2.0)
+	yCenter := (float64(height) / 2.0) + (float64(finalHeight) / 2.0)
 
 	// draw the text
-	c.SetFontSize(fontsize)
+	c.SetFontSize(scaledFontSize)
 	c.SetSrc(image.NewUniform(fgcolor))
-	_, err := c.DrawString(text, freetype.Pt(int(xcenter), int(ycenter)))
+	_, err := c.DrawString(text, freetype.Pt(int(xCenter), int(yCenter)))
 	if err != nil {
 		return err
 	}
@@ -173,9 +172,9 @@ func getColor(colorstr string) (color.RGBA, error) {
 	return col, nil
 }
 
-// maxPointSize returns the maximum point size we can use to fit text inside width and height
-// as well as the resulting text-width in pixels
-func maxPointSize(text string, c *freetype.Context, width, height int) (float64, int) {
+// maxPointSize returns the maximum point size we can use to fit text inside
+// width and height as well as the resulting text-width in pixels
+func maxPointSize(text string, c *freetype.Context, width, height int) (float64, int, int) {
 	// never let the font size exceed the requested height
 	fontsize := 512.00
 	for int(c.PointToFixed(fontsize)/64) > height {
@@ -189,11 +188,13 @@ func maxPointSize(text string, c *freetype.Context, width, height int) (float64,
 
 		textExtent, err := c.DrawString(text, freetype.Pt(0, 0))
 		if err != nil {
-			return 0, 0
+			return 0, 0, 0
 		}
 
 		actwidth = int(float64(textExtent.X) / 64)
 	}
 
-	return fontsize, actwidth
+	actheight := int(c.PointToFixed(fontsize/2.0) / 64)
+
+	return fontsize, actwidth, actheight
 }
