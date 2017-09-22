@@ -120,8 +120,7 @@ func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height in
 	c.SetHinting(font.HintingNone)
 
 	// draw with scaled fontsize to get the real text extent
-	scaledWidth := int(float64(width) * (1.0 - marginratio))
-	scaledHeight := int(float64(height) * (1.0 - marginratio))
+	scaledWidth, scaledHeight := getFontScaledSize(width, height, marginratio)
 	scaledFontSize, finalWidth, finalHeight := maxPointSize(text, c, scaledWidth, scaledHeight)
 	xCenter := (float64(width) / 2.0) - (float64(finalWidth) / 2.0)
 	yCenter := (float64(height) / 2.0) + (float64(finalHeight) / 2.0)
@@ -152,6 +151,13 @@ func getFont() (*truetype.Font, error) {
 	}
 
 	return fontTTF, nil
+}
+
+// getFontScaledSize ...
+func getFontScaledSize(width int, height int, marginratio float64) (int, int) {
+	scaledWidth := int(float64(width) * (1.0 - marginratio))
+	scaledHeight := int(float64(height) * (1.0 - marginratio))
+	return scaledWidth, scaledHeight
 }
 
 // getColor gets a color from a RGB HTML hex string.
