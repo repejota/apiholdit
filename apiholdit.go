@@ -60,11 +60,11 @@ func (p *PlaceHolder) SetFgColor(fgcolor string) error {
 
 // Render ...
 func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
-	rectangle := p.Canvas.Bounds()
-
 	// Render background
-	bgcolor := &image.Uniform{p.BackgroundColor}
-	draw.Draw(p.Canvas, rectangle, bgcolor, image.ZP, draw.Src)
+	err := renderBackground(p.Canvas, p.BackgroundColor)
+	if err != nil {
+		return nil, err
+	}
 
 	// Render text
 	ttf, err := ioutil.ReadFile("/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf")
@@ -80,6 +80,7 @@ func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
 	c.SetFont(fontTTF)
 	c.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
 	c.SetDst(p.Canvas)
+	rectangle := p.Canvas.Bounds()
 	c.SetClip(rectangle)
 	c.SetHinting(font.HintingNone)
 
@@ -108,6 +109,14 @@ func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
 		return buffer, nil
 	}
 	return buffer, err
+}
+
+// renderBackground ...
+func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
+	rectangle := canvas.Bounds()
+	color := &image.Uniform{bgcolor}
+	draw.Draw(canvas, rectangle, color, image.ZP, draw.Src)
+	return nil
 }
 
 // getColor gets a color from a RGB HTML hex string.
