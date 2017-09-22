@@ -81,28 +81,7 @@ func (p *PlaceHolder) Render() error {
 	}
 
 	// Render text
-	rectangle := p.Canvas.Bounds()
-	c := freetype.NewContext()
-	c.SetDPI(DefaultDPI)
-	c.SetFont(fontTTF)
-	c.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
-	c.SetDst(p.Canvas)
-	c.SetClip(rectangle)
-	c.SetHinting(font.HintingNone)
-
-	// draw with scaled fontsize to get the real text extent
-	fontsize, actwidth := maxPointSize(p.Text, c,
-		int(float64(p.Width)*(1.0-p.MarginRatio)),
-		int(float64(p.Height)*(1.0-p.MarginRatio)))
-
-	actheight := c.PointToFixed(fontsize/2.0) / 64
-	xcenter := (float64(p.Width) / 2.0) - (float64(actwidth) / 2.0)
-	ycenter := (float64(p.Height) / 2.0) + (float64(actheight) / 2.0)
-
-	// draw the text
-	c.SetFontSize(fontsize)
-	c.SetSrc(image.NewUniform(p.ForegroundColor))
-	_, err = c.DrawString(p.Text, freetype.Pt(int(xcenter), int(ycenter)))
+	err = renderText(p.Canvas, fontTTF, p.Width, p.Height, p.MarginRatio, p.Text, p.ForegroundColor)
 	if err != nil {
 		return err
 	}
@@ -125,6 +104,37 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 	rectangle := canvas.Bounds()
 	color := &image.Uniform{bgcolor}
 	draw.Draw(canvas, rectangle, color, image.ZP, draw.Src)
+	return nil
+}
+
+// renderText ...
+func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
+	rectangle := canvas.Bounds()
+	c := freetype.NewContext()
+	c.SetDPI(DefaultDPI)
+	c.SetFont(fontTTF)
+	c.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
+	c.SetDst(canvas)
+	c.SetClip(rectangle)
+	c.SetHinting(font.HintingNone)
+
+	// draw with scaled fontsize to get the real text extent
+	fontsize, actwidth := maxPointSize(text, c,
+		int(float64(width)*(1.0-marginratio)),
+		int(float64(height)*(1.0-marginratio)))
+
+	actheight := c.PointToFixed(fontsize/2.0) / 64
+	xcenter := (float64(width) / 2.0) - (float64(actwidth) / 2.0)
+	ycenter := (float64(height) / 2.0) + (float64(actheight) / 2.0)
+
+	// draw the text
+	c.SetFontSize(fontsize)
+	c.SetSrc(image.NewUniform(fgcolor))
+	_, err := c.DrawString(text, freetype.Pt(int(xcenter), int(ycenter)))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
