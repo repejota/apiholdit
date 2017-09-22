@@ -39,7 +39,7 @@ func NewPlaceHolder(width int, height int) *PlaceHolder {
 // SetBgColor ...
 func (p *PlaceHolder) SetBgColor(bgcolor string) error {
 	var col color.RGBA
-	col, err := p.getColor(bgcolor)
+	col, err := getColor(bgcolor)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (p *PlaceHolder) SetBgColor(bgcolor string) error {
 // SetFgColor ...
 func (p *PlaceHolder) SetFgColor(fgcolor string) error {
 	var col color.RGBA
-	col, err := p.getColor(fgcolor)
+	col, err := getColor(fgcolor)
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
 }
 
 // getColor gets a color from a RGB HTML hex string.
-func (p *PlaceHolder) getColor(colorstr string) (color.RGBA, error) {
+func getColor(colorstr string) (color.RGBA, error) {
 	var col color.RGBA
 	format := "%02x%02x%02x"
 	var r, g, b uint8
