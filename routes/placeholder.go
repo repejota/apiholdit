@@ -29,22 +29,28 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 	p := apiholdit.NewPlaceHolder(width, height)
 
 	bgcolorstr := r.URL.Query().Get("bgcolor")
-	err = p.SetBgColor(bgcolorstr)
+	err = p.SetBackgroundColor(bgcolorstr)
 	if err != nil {
 		http.Error(w, "Invalid placeholder background color", http.StatusBadRequest)
 		return
 	}
 
 	fgcolorstr := r.URL.Query().Get("fgcolor")
-	err = p.SetFgColor(fgcolorstr)
+	err = p.SetForegroundColor(fgcolorstr)
 	if err != nil {
 		http.Error(w, "Invalid placeholder foreground color", http.StatusBadRequest)
 		return
 	}
 
-	buffer, err := p.Render()
+	err = p.Render()
 	if err != nil {
 		http.Error(w, "Unable to render image", http.StatusInternalServerError)
+		return
+	}
+
+	buffer, err := p.EncodePNG()
+	if err != nil {
+		http.Error(w, "Unable to encode image to PNG format", http.StatusInternalServerError)
 		return
 	}
 

@@ -36,8 +36,8 @@ func NewPlaceHolder(width int, height int) *PlaceHolder {
 	return &p
 }
 
-// SetBgColor ...
-func (p *PlaceHolder) SetBgColor(bgcolor string) error {
+// SetBackgroundColor ...
+func (p *PlaceHolder) SetBackgroundColor(bgcolor string) error {
 	var col color.RGBA
 	col, err := getColor(bgcolor)
 	if err != nil {
@@ -47,8 +47,8 @@ func (p *PlaceHolder) SetBgColor(bgcolor string) error {
 	return nil
 }
 
-// SetFgColor ...
-func (p *PlaceHolder) SetFgColor(fgcolor string) error {
+// SetForegroundColor ...
+func (p *PlaceHolder) SetForegroundColor(fgcolor string) error {
 	var col color.RGBA
 	col, err := getColor(fgcolor)
 	if err != nil {
@@ -59,21 +59,21 @@ func (p *PlaceHolder) SetFgColor(fgcolor string) error {
 }
 
 // Render ...
-func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
+func (p *PlaceHolder) Render() error {
 	// Render background
 	err := renderBackground(p.Canvas, p.BackgroundColor)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// Render text
 	ttf, err := ioutil.ReadFile("/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf")
 	if err != nil {
-		return nil, err
+		return err
 	}
 	fontTTF, err := freetype.ParseFont(ttf)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	c := freetype.NewContext()
 	c.SetDPI(DPI)
@@ -100,11 +100,16 @@ func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
 	c.SetSrc(image.NewUniform(p.ForegroundColor))
 	_, err = c.DrawString(text, freetype.Pt(int(xcenter), int(ycenter)))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
+	return nil
+}
+
+// EncodePNG ...
+func (p *PlaceHolder) EncodePNG() (*bytes.Buffer, error) {
 	buffer := new(bytes.Buffer)
-	err = png.Encode(buffer, p.Canvas)
+	err := png.Encode(buffer, p.Canvas)
 	if err != nil {
 		return buffer, nil
 	}
