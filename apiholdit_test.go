@@ -16,7 +16,7 @@ func TestNewPlaceHolder(t *testing.T) {
 
 func TestSetBgColor(t *testing.T) {
 	placeholder := NewPlaceHolder(640, 480)
-	err := placeholder.SetBgColor("ff0000")
+	err := placeholder.SetBackgroundColor("ff0000")
 	if err != nil {
 		t.Fatalf("Error %s", err)
 	}
@@ -36,7 +36,7 @@ func TestSetBgColor(t *testing.T) {
 
 func TestSetBgColorFail(t *testing.T) {
 	placeholder := NewPlaceHolder(640, 480)
-	err := placeholder.SetBgColor("foo")
+	err := placeholder.SetBackgroundColor("foo")
 	if err == nil {
 		t.Fatalf("Expected to error but got %s", err)
 	}
@@ -44,7 +44,7 @@ func TestSetBgColorFail(t *testing.T) {
 
 func TestSetFgColor(t *testing.T) {
 	placeholder := NewPlaceHolder(640, 480)
-	err := placeholder.SetFgColor("00ffff")
+	err := placeholder.SetForegroundColor("00ffff")
 	if err != nil {
 		t.Fatalf("Error %s", err)
 	}
@@ -64,7 +64,7 @@ func TestSetFgColor(t *testing.T) {
 
 func TestSetFgColorFail(t *testing.T) {
 	placeholder := NewPlaceHolder(640, 480)
-	err := placeholder.SetFgColor("foo")
+	err := placeholder.SetForegroundColor("foo")
 	if err == nil {
 		t.Fatalf("Expected to error but got %s", err)
 	}

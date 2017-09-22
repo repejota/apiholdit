@@ -42,6 +42,12 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = p.SetText("Lorem ipsum dolor sit amet.")
+	if err != nil {
+		http.Error(w, "Unable set text", http.StatusInternalServerError)
+		return
+	}
+
 	err = p.Render()
 	if err != nil {
 		http.Error(w, "Unable to render image", http.StatusInternalServerError)

@@ -23,6 +23,7 @@ type PlaceHolder struct {
 	BackgroundColor *color.RGBA
 	ForegroundColor *color.RGBA
 	Canvas          *image.RGBA
+	Text            string
 }
 
 // NewPlaceHolder ...
@@ -58,6 +59,12 @@ func (p *PlaceHolder) SetForegroundColor(fgcolor string) error {
 	return nil
 }
 
+// SetText ...
+func (p *PlaceHolder) SetText(text string) error {
+	p.Text = text
+	return nil
+}
+
 // Render ...
 func (p *PlaceHolder) Render() error {
 	// Render background
@@ -84,10 +91,8 @@ func (p *PlaceHolder) Render() error {
 	c.SetClip(rectangle)
 	c.SetHinting(font.HintingNone)
 
-	text := "Lorem ipsum dolor sit amet."
-
 	// draw with scaled fontsize to get the real text extent
-	fontsize, actwidth := maxPointSize(text, c,
+	fontsize, actwidth := maxPointSize(p.Text, c,
 		int(float64(p.Width)*(1.0-p.MarginRatio)),
 		int(float64(p.Height)*(1.0-p.MarginRatio)))
 
@@ -98,7 +103,7 @@ func (p *PlaceHolder) Render() error {
 	// draw the text
 	c.SetFontSize(fontsize)
 	c.SetSrc(image.NewUniform(p.ForegroundColor))
-	_, err = c.DrawString(text, freetype.Pt(int(xcenter), int(ycenter)))
+	_, err = c.DrawString(p.Text, freetype.Pt(int(xcenter), int(ycenter)))
 	if err != nil {
 		return err
 	}
