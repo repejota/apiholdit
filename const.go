@@ -11,5 +11,5 @@ const (
 	DefaultServerPort = "8080"
 
 	// DPI ...
-	DPI = 72.00
+	DefaultDPI = 72.00
 )

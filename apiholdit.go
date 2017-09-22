@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 
 	"github.com/golang/freetype"
+	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 )
 
@@ -73,21 +74,19 @@ func (p *PlaceHolder) Render() error {
 		return err
 	}
 
+	// Get font to be used
+	fontTTF, err := getFont()
+	if err != nil {
+		return err
+	}
+
 	// Render text
-	ttf, err := ioutil.ReadFile("/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf")
-	if err != nil {
-		return err
-	}
-	fontTTF, err := freetype.ParseFont(ttf)
-	if err != nil {
-		return err
-	}
+	rectangle := p.Canvas.Bounds()
 	c := freetype.NewContext()
-	c.SetDPI(DPI)
+	c.SetDPI(DefaultDPI)
 	c.SetFont(fontTTF)
 	c.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
 	c.SetDst(p.Canvas)
-	rectangle := p.Canvas.Bounds()
 	c.SetClip(rectangle)
 	c.SetHinting(font.HintingNone)
 
@@ -127,6 +126,23 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 	color := &image.Uniform{bgcolor}
 	draw.Draw(canvas, rectangle, color, image.ZP, draw.Src)
 	return nil
+}
+
+// getFont ...
+func getFont() (*truetype.Font, error) {
+	fontPath := "/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf"
+
+	ttf, err := ioutil.ReadFile(fontPath)
+	if err != nil {
+		return nil, err
+	}
+
+	fontTTF, err := freetype.ParseFont(ttf)
+	if err != nil {
+		return nil, err
+	}
+
+	return fontTTF, nil
 }
 
 // getColor gets a color from a RGB HTML hex string.
