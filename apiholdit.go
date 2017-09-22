@@ -4,14 +4,15 @@ package apiholdit
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
+	"image/gif"
+	"image/jpeg"
 	"image/png"
-	"io/ioutil"
 
 	"github.com/golang/freetype"
+	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 )
 
@@ -23,6 +24,7 @@ type PlaceHolder struct {
 	BackgroundColor *color.RGBA
 	ForegroundColor *color.RGBA
 	Canvas          *image.RGBA
+	Text            string
 }
 
 // NewPlaceHolder ...
@@ -30,16 +32,16 @@ func NewPlaceHolder(width int, height int) *PlaceHolder {
 	p := PlaceHolder{}
 	p.Width = width
 	p.Height = height
-	p.MarginRatio = 0.2
+	p.MarginRatio = DefaultMarginRatio
 	rectangle := image.Rect(0, 0, width, height)
 	p.Canvas = image.NewRGBA(rectangle)
 	return &p
 }
 
-// SetBgColor ...
-func (p *PlaceHolder) SetBgColor(bgcolor string) error {
+// SetBackgroundColor ...
+func (p *PlaceHolder) SetBackgroundColor(bgcolor string) error {
 	var col color.RGBA
-	col, err := p.getColor(bgcolor)
+	col, err := getColor(bgcolor)
 	if err != nil {
 		return err
 	}
@@ -47,10 +49,10 @@ func (p *PlaceHolder) SetBgColor(bgcolor string) error {
 	return nil
 }
 
-// SetFgColor ...
-func (p *PlaceHolder) SetFgColor(fgcolor string) error {
+// SetForegroundColor ...
+func (p *PlaceHolder) SetForegroundColor(fgcolor string) error {
 	var col color.RGBA
-	col, err := p.getColor(fgcolor)
+	col, err := getColor(fgcolor)
 	if err != nil {
 		return err
 	}
@@ -58,97 +60,97 @@ func (p *PlaceHolder) SetFgColor(fgcolor string) error {
 	return nil
 }
 
-// Render ...
-func (p *PlaceHolder) Render() (*bytes.Buffer, error) {
-	rectangle := p.Canvas.Bounds()
+// SetText ...
+func (p *PlaceHolder) SetText(text string) error {
+	p.Text = text
+	return nil
+}
 
+// Render ...
+func (p *PlaceHolder) Render() error {
 	// Render background
-	bgcolor := &image.Uniform{p.BackgroundColor}
-	draw.Draw(p.Canvas, rectangle, bgcolor, image.ZP, draw.Src)
+	err := renderBackground(p.Canvas, p.BackgroundColor)
+	if err != nil {
+		return err
+	}
+
+	// Get font to be used
+	fontTTF, err := getFont()
+	if err != nil {
+		return err
+	}
 
 	// Render text
-	ttf, err := ioutil.ReadFile("/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf")
+	err = renderText(p.Canvas, fontTTF, p.Width, p.Height, p.MarginRatio, p.Text, p.ForegroundColor)
 	if err != nil {
-		return nil, err
-	}
-	fontTTF, err := freetype.ParseFont(ttf)
-	if err != nil {
-		return nil, err
-	}
-	c := freetype.NewContext()
-	c.SetDPI(DPI)
-	c.SetFont(fontTTF)
-	c.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
-	c.SetDst(p.Canvas)
-	c.SetClip(rectangle)
-	c.SetHinting(font.HintingNone)
-
-	text := "Lorem ipsum dolor sit amet."
-
-	// draw with scaled fontsize to get the real text extent
-	fontsize, actwidth := maxPointSize(text, c,
-		int(float64(p.Width)*(1.0-p.MarginRatio)),
-		int(float64(p.Height)*(1.0-p.MarginRatio)))
-
-	actheight := c.PointToFixed(fontsize/2.0) / 64
-	xcenter := (float64(p.Width) / 2.0) - (float64(actwidth) / 2.0)
-	ycenter := (float64(p.Height) / 2.0) + (float64(actheight) / 2.0)
-
-	// draw the text
-	c.SetFontSize(fontsize)
-	c.SetSrc(image.NewUniform(p.ForegroundColor))
-	_, err = c.DrawString(text, freetype.Pt(int(xcenter), int(ycenter)))
-	if err != nil {
-		return nil, err
+		return err
 	}
 
+	return nil
+}
+
+// EncodePNG ...
+func (p *PlaceHolder) EncodePNG() (*bytes.Buffer, error) {
 	buffer := new(bytes.Buffer)
-	err = png.Encode(buffer, p.Canvas)
+	err := png.Encode(buffer, p.Canvas)
 	if err != nil {
 		return buffer, nil
 	}
 	return buffer, err
 }
 
-// getColor gets a color from a RGB HTML hex string.
-func (p *PlaceHolder) getColor(colorstr string) (color.RGBA, error) {
-	var col color.RGBA
-	format := "%02x%02x%02x"
-	var r, g, b uint8
-	n, err := fmt.Sscanf(colorstr, format, &r, &g, &b)
+// EncodeGIF ...
+func (p *PlaceHolder) EncodeGIF(options *gif.Options) (*bytes.Buffer, error) {
+	buffer := new(bytes.Buffer)
+	err := gif.Encode(buffer, p.Canvas, options)
 	if err != nil {
-		col = color.RGBA{0, 0, 0, 255}
-		return col, err
+		return buffer, nil
 	}
-	if n != 3 {
-		col = color.RGBA{0, 0, 0, 255}
-		return col, fmt.Errorf("color: %v is not a hex-color", colorstr)
-	}
-	col = color.RGBA{r, g, b, 255}
-	return col, nil
+	return buffer, err
 }
 
-// maxPointSize returns the maximum point size we can use to fit text inside width and height
-// as well as the resulting text-width in pixels
-func maxPointSize(text string, c *freetype.Context, width, height int) (float64, int) {
-	// never let the font size exceed the requested height
-	fontsize := 512.00
-	for int(c.PointToFixed(fontsize)/64) > height {
-		fontsize -= 2
+// EncodeJPEG ...
+func (p *PlaceHolder) EncodeJPEG(options *jpeg.Options) (*bytes.Buffer, error) {
+	buffer := new(bytes.Buffer)
+	err := jpeg.Encode(buffer, p.Canvas, options)
+	if err != nil {
+		return buffer, nil
+	}
+	return buffer, err
+}
+
+// renderBackground ...
+func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
+	rectangle := canvas.Bounds()
+	color := &image.Uniform{bgcolor}
+	draw.Draw(canvas, rectangle, color, image.ZP, draw.Src)
+	return nil
+}
+
+// renderText ...
+func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
+	rectangle := canvas.Bounds()
+
+	context := freetype.NewContext()
+	context.SetDPI(DefaultDPI)
+	context.SetFont(fontTTF)
+	context.SetSrc(image.NewUniform(color.RGBA{0, 0, 0, 0}))
+	context.SetDst(canvas)
+	context.SetClip(rectangle)
+	context.SetHinting(font.HintingNone)
+
+	// calculate final font size and coordinates to draw
+	finalFontSize, finalWidth, finalHeight := getFontFinalSize(text, context, width, height, marginratio)
+	context.SetFontSize(finalFontSize)
+
+	// draw the text
+	context.SetSrc(image.NewUniform(fgcolor))
+	xCenter := (float64(width) / 2.0) - (float64(finalWidth) / 2.0)
+	yCenter := (float64(height) / 2.0) + (float64(finalHeight) / 2.0)
+	_, err := context.DrawString(text, freetype.Pt(int(xCenter), int(yCenter)))
+	if err != nil {
+		return err
 	}
 
-	// find the biggest matching font size for the requested width
-	var actwidth int
-	for actwidth = width + 1; actwidth > width; fontsize -= 2 {
-		c.SetFontSize(fontsize)
-
-		textExtent, err := c.DrawString(text, freetype.Pt(0, 0))
-		if err != nil {
-			return 0, 0
-		}
-
-		actwidth = int(float64(textExtent.X) / 64)
-	}
-
-	return fontsize, actwidth
+	return nil
 }
