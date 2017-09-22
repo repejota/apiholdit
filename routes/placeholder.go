@@ -11,6 +11,7 @@ import (
 
 // PlaceHolder generates an image placeholder.
 func PlaceHolder(w http.ResponseWriter, r *http.Request) {
+	p := apiholdit.NewPlaceHolder()
 
 	widthstr := r.URL.Query().Get("width")
 	width, err := strconv.Atoi(widthstr)
@@ -18,6 +19,7 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid placeholder width", http.StatusBadRequest)
 		return
 	}
+	p.SetWidth(uint(width))
 
 	heightstr := r.URL.Query().Get("height")
 	height, err := strconv.Atoi(heightstr)
@@ -25,8 +27,7 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid placeholder height", http.StatusBadRequest)
 		return
 	}
-
-	p := apiholdit.NewPlaceHolder(width, height)
+	p.SetHeight(uint(height))
 
 	bgcolorstr := r.URL.Query().Get("bgcolor")
 	err = p.SetBackgroundColor(bgcolorstr)

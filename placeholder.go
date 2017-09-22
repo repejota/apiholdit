@@ -18,8 +18,8 @@ import (
 
 // PlaceHolder ...
 type PlaceHolder struct {
-	Width           int
-	Height          int
+	Width           uint
+	Height          uint
 	MarginRatio     float64
 	BackgroundColor *color.RGBA
 	ForegroundColor *color.RGBA
@@ -28,14 +28,31 @@ type PlaceHolder struct {
 }
 
 // NewPlaceHolder ...
-func NewPlaceHolder(width int, height int) *PlaceHolder {
-	p := PlaceHolder{}
+func NewPlaceHolder() *PlaceHolder {
+	placeholder := PlaceHolder{
+		Width:       DefaultWidth,
+		Height:      DefaultHeight,
+		MarginRatio: DefaultMarginRatio,
+	}
+	return &placeholder
+}
+
+// SetWidth sets the width of the placeholder and regenerates the canvas with
+// the new size.
+func (p *PlaceHolder) SetWidth(width uint) error {
 	p.Width = width
-	p.Height = height
-	p.MarginRatio = DefaultMarginRatio
-	rectangle := image.Rect(0, 0, width, height)
+	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
 	p.Canvas = image.NewRGBA(rectangle)
-	return &p
+	return nil
+}
+
+// SetHeight sets the height of the placeholder and regenerates the canvas with
+// the new size.
+func (p *PlaceHolder) SetHeight(height uint) error {
+	p.Height = height
+	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
+	p.Canvas = image.NewRGBA(rectangle)
+	return nil
 }
 
 // SetBackgroundColor ...
@@ -68,6 +85,9 @@ func (p *PlaceHolder) SetText(text string) error {
 
 // Render ...
 func (p *PlaceHolder) Render() error {
+	rectangle := image.Rect(0, 0, DefaultWidth, DefaultHeight)
+	p.Canvas = image.NewRGBA(rectangle)
+
 	// Render background
 	err := renderBackground(p.Canvas, p.BackgroundColor)
 	if err != nil {
@@ -128,7 +148,7 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 }
 
 // renderText ...
-func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
+func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width uint, height uint, marginratio float64, text string, fgcolor *color.RGBA) error {
 	rectangle := canvas.Bounds()
 
 	context := freetype.NewContext()
