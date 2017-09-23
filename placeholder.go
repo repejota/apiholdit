@@ -105,7 +105,7 @@ func (p *PlaceHolder) Render() error {
 	}
 
 	// Get font to be used
-	fontTTF, err := getFont()
+	fontTTF, err := getFont(DefaultFontPath)
 	if err != nil {
 		return err
 	}
