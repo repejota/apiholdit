@@ -51,8 +51,8 @@ lint:
 deps:
 	go get -u golang.org/x/image/font
 	go get -u github.com/golang/freetype
-	go get -u github.com/jteeuwen/go-bindata/...
 
 dev-deps:
 	go get -u github.com/alecthomas/gometalinter
 	gometalinter --install
+	go get -u github.com/jteeuwen/go-bindata/...
