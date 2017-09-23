@@ -41,5 +41,5 @@ var (
 
 	// DefaultForegroundColor : Midnight Blue #2c3e50
 	// http://flatuicolors.com/
-	DefaultForegroundColor = &color.RGBA{44, 62, 199, 255}
+	DefaultForegroundColor = &color.RGBA{44, 62, 80, 255}
 )
