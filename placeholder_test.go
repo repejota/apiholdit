@@ -14,6 +14,9 @@ func TestNewPlaceHolder(t *testing.T) {
 	if placeholder.Height != expectedHeight {
 		t.Fatalf("Placeholder height expected to be %d but got %d", expectedHeight, placeholder.Height)
 	}
+	if placeholder.Text != DefaultText {
+		t.Fatalf("Placehooder text expected to be %s but bot %s", DefaultText, placeholder.Text)
+	}
 }
 
 func TestSetWidth(t *testing.T) {
@@ -75,6 +78,11 @@ func TestSetText(t *testing.T) {
 	placeholder := NewPlaceHolder()
 	if placeholder.Text != DefaultText {
 		t.Fatalf("Placehooder text expected to be %s but bot %s", DefaultText, placeholder.Text)
+	}
+	expectedText := "foo bar"
+	placeholder.SetText(expectedText)
+	if placeholder.Text != expectedText {
+		t.Fatalf("Placehooder text expected to be %s but bot %s", expectedText, placeholder.Text)
 	}
 }
 
