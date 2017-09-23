@@ -14,15 +14,15 @@ func TestGetFont(t *testing.T) {
 }
 
 func TestGetFontNotFound(t *testing.T) {
-	path := "/tmp/invalidfont.ttf"
+	path := "data/fixtures/notfound.ttf"
 	_, err := getFont(path)
-	if err.Error() != "Asset /tmp/invalidfont.ttf not found" {
+	if err.Error() != "Asset data/fixtures/notfound.ttf not found" {
 		t.Fatal(err)
 	}
 }
 
 func TestGetFontInvalid(t *testing.T) {
-	path := "data/testdata/invalidfont.ttf"
+	path := "data/fixtures/invalidfont.ttf"
 	_, err := getFont(path)
 	if err.Error() != "freetype: invalid TrueType format: bad TTF version" {
 		t.Fatal(err)
