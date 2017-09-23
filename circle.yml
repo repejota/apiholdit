@@ -25,6 +25,7 @@ jobs:
       - run: make deps
       - run: make dev-deps
       - run: make
+      - run: make lint
       - run: go test -v ./...
       - run: go get -u github.com/mattn/goveralls
       - run: make cover-html
