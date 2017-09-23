@@ -11,3 +11,5 @@
 .glide/
 
 .vscode/
+
+coverage-all.out
