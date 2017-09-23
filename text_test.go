@@ -20,3 +20,11 @@ func TestGetFontNotFound(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestGetFontInvalid(t *testing.T) {
+	path := "testdata/invalidfont.ttf"
+	_, err := getFont(path)
+	if err.Error() != "freetype: invalid TrueType format: bad TTF version" {
+		t.Fatal(err)
+	}
+}
