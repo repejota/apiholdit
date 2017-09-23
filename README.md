@@ -7,7 +7,7 @@
 
 * [Introduction](https://github.com/repejota/apiholdit#introduction)
 * [User Documentation](https://github.com/repejota/apiholdit#user-documentation)
-	* [Query Parameters](https://github.com/repejota/apiholdit#query-parameters)
+	* [Query Parameters](https://github.com/repejota/apiholdit#URL-parameters)
 	* [Examples](https://github.com/repejota/apiholdit#examples)
 * [Developer Documentation](https://github.com/repejota/apiholdit#developer-documentation)
 * [Continuous Integration](https://github.com/repejota/apiholdit#continuous-integration)
