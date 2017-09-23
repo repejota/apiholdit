@@ -87,7 +87,7 @@ Example:
 curl http://<host>:<port>/i?fgcolor=2c3e50 -o placeholder.png
 ```
 
-### Examples
+### Examples
 
 Here are a few eamples using the previous defined API:
 
