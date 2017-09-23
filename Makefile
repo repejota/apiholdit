@@ -6,12 +6,17 @@ PACKAGES = "./..."
 # values
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
-install:
+.PHONY: install
+install: prebuild
 	go install $(LDFLAGS) -v $(PACKAGES)
 
 .PHONY: build
-build:
+build: prebuild
 	go build $(LDFLAGS) -v $(PACKAGES)
+
+.PHONY: prebuild
+prebuild:
+	go-bindata -pkg apiholdit -o data.go data/...
 
 .PHONY: version
 version:
@@ -20,6 +25,7 @@ version:
 .PHONY: clean
 clean:
 	go clean
+	rm -rf data.go
 	rm -rf coverage-all.out
 
 # Testing
@@ -55,3 +61,4 @@ deps:
 dev-deps:
 	go get -u github.com/alecthomas/gometalinter
 	gometalinter --install
+	go get -u github.com/jteeuwen/go-bindata/...
