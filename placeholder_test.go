@@ -55,7 +55,10 @@ func TestSetHeight(t *testing.T) {
 		t.Fatalf("Placeholder height expected to be %d but got %d", expectedHeight, placeholder.Width)
 	}
 	newHeight := int(768)
-	placeholder.SetHeight(newHeight)
+	err := placeholder.SetHeight(newHeight)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if placeholder.Height != newHeight {
 		t.Fatalf("Placeholder height expected to be %d but got %d", newHeight, placeholder.Width)
 	}
@@ -80,7 +83,10 @@ func TestSetText(t *testing.T) {
 		t.Fatalf("Placehooder text expected to be %s but bot %s", DefaultText, placeholder.Text)
 	}
 	expectedText := "foo bar"
-	placeholder.SetText(expectedText)
+	err := placeholder.SetText(expectedText)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if placeholder.Text != expectedText {
 		t.Fatalf("Placehooder text expected to be %s but bot %s", expectedText, placeholder.Text)
 	}

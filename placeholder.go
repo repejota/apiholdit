@@ -48,7 +48,7 @@ func (p *PlaceHolder) SetWidth(width int) error {
 		return errors.New("width must be >= 0")
 	}
 	p.Width = width
-	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
+	rectangle := image.Rect(0, 0, p.Width, p.Height)
 	p.Canvas = image.NewRGBA(rectangle)
 	return nil
 }
@@ -60,7 +60,7 @@ func (p *PlaceHolder) SetHeight(height int) error {
 		return errors.New("height must be >= 0")
 	}
 	p.Height = height
-	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
+	rectangle := image.Rect(0, 0, p.Width, p.Height)
 	p.Canvas = image.NewRGBA(rectangle)
 	return nil
 }
@@ -110,11 +110,8 @@ func (p *PlaceHolder) Render() error {
 
 	// Render text
 	err = renderText(p.Canvas, fontTTF, p.Width, p.Height, p.MarginRatio, p.Text, p.ForegroundColor)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 // EncodePNG ...
@@ -148,7 +145,7 @@ func (p *PlaceHolder) EncodeJPEG(options *jpeg.Options) (*bytes.Buffer, error) {
 }
 
 // renderBackground ...
-func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
+func renderBackground(canvas draw.Image, bgcolor color.Color) error {
 	rectangle := canvas.Bounds()
 	color := &image.Uniform{bgcolor}
 	draw.Draw(canvas, rectangle, color, image.ZP, draw.Src)
@@ -156,7 +153,7 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 }
 
 // renderText ...
-func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
+func renderText(canvas draw.Image, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor color.Color) error {
 	rectangle := canvas.Bounds()
 
 	context := freetype.NewContext()
@@ -176,9 +173,6 @@ func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height in
 	xCenter := (float64(width) / 2.0) - (float64(finalWidth) / 2.0)
 	yCenter := (float64(height) / 2.0) + (float64(finalHeight) / 2.0)
 	_, err := context.DrawString(text, freetype.Pt(int(xCenter), int(yCenter)))
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
