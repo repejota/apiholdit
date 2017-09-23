@@ -3,15 +3,13 @@
 package apiholdit
 
 import (
-	"io/ioutil"
-
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 )
 
 // getFont ...
 func getFont(path string) (*truetype.Font, error) {
-	ttf, err := ioutil.ReadFile(path)
+	ttf, err := Asset(path)
 	if err != nil {
 		return nil, err
 	}

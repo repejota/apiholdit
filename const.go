@@ -37,7 +37,7 @@ const (
 	DefaultText = "Placeholder"
 
 	// DefaultFontPath ...
-	DefaultFontPath = "/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf"
+	DefaultFontPath = "data/fonts/Roboto-Black.ttf"
 )
 
 var (
