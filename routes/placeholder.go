@@ -19,7 +19,11 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid placeholder width", http.StatusBadRequest)
 		return
 	}
-	p.SetWidth(uint(width))
+	err = p.SetWidth(width)
+	if err != nil {
+		http.Error(w, "Invalid placeholder width", http.StatusInternalServerError)
+		return
+	}
 
 	heightstr := r.URL.Query().Get("height")
 	height, err := strconv.Atoi(heightstr)
@@ -27,7 +31,11 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid placeholder height", http.StatusBadRequest)
 		return
 	}
-	p.SetHeight(uint(height))
+	err = p.SetHeight(height)
+	if err != nil {
+		http.Error(w, "Invalid placeholder height", http.StatusInternalServerError)
+		return
+	}
 
 	bgcolorstr := r.URL.Query().Get("bgcolor")
 	err = p.SetBackgroundColor(bgcolorstr)
