@@ -65,23 +65,23 @@ func (p *PlaceHolder) SetHeight(height int) error {
 
 // SetBackgroundColor ...
 func (p *PlaceHolder) SetBackgroundColor(bgcolor string) error {
-	var col color.RGBA
+	var col *color.RGBA
 	col, err := getColor(bgcolor)
 	if err != nil {
 		return err
 	}
-	p.BackgroundColor = &col
+	p.BackgroundColor = col
 	return nil
 }
 
 // SetForegroundColor ...
 func (p *PlaceHolder) SetForegroundColor(fgcolor string) error {
-	var col color.RGBA
+	var col *color.RGBA
 	col, err := getColor(fgcolor)
 	if err != nil {
 		return err
 	}
-	p.ForegroundColor = &col
+	p.ForegroundColor = col
 	return nil
 }
 
