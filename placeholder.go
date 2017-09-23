@@ -31,9 +31,10 @@ type PlaceHolder struct {
 // NewPlaceHolder ...
 func NewPlaceHolder() *PlaceHolder {
 	placeholder := PlaceHolder{
-		Width:       DefaultWidth,
-		Height:      DefaultHeight,
-		MarginRatio: DefaultMarginRatio,
+		Width:           DefaultWidth,
+		Height:          DefaultHeight,
+		MarginRatio:     DefaultMarginRatio,
+		BackgroundColor: DefaultBackgroundColor,
 	}
 	return &placeholder
 }
