@@ -51,11 +51,13 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fgcolorstr := r.URL.Query().Get("fgcolor")
-	err := p.SetForegroundColor(fgcolorstr)
-	if err != nil {
-		http.Error(w, "Invalid placeholder foreground color", http.StatusBadRequest)
-		return
+	if _, ok := queryParams["fgcolor"]; ok {
+		fgcolorstr := r.URL.Query().Get("fgcolor")
+		err := p.SetForegroundColor(fgcolorstr)
+		if err != nil {
+			http.Error(w, "Invalid placeholder foreground color", http.StatusBadRequest)
+			return
+		}
 	}
 
 	err = p.SetText("Lorem ipsum dolor sit amet.")
