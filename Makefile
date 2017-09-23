@@ -6,10 +6,6 @@ PACKAGES = "./..."
 # values
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
-.PHONY: prebuild
-prebuild:
-	go-bindata -o data.go data/...
-
 .PHONY: install
 install: prebuild
 	go install $(LDFLAGS) -v $(PACKAGES)
@@ -17,6 +13,10 @@ install: prebuild
 .PHONY: build
 build: prebuild
 	go build $(LDFLAGS) -v $(PACKAGES)
+
+.PHONY: prebuild
+prebuild:
+	go-bindata -pkg apiholdit -o data.go data/...
 
 .PHONY: version
 version:

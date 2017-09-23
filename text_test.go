@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetFont(t *testing.T) {
-	_, err := getFont("testdata/Roboto-Black.ttf")
+	_, err := getFont("data/fonts/Roboto-Black.ttf")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -16,13 +16,13 @@ func TestGetFont(t *testing.T) {
 func TestGetFontNotFound(t *testing.T) {
 	path := "/tmp/invalidfont.ttf"
 	_, err := getFont(path)
-	if err.Error() != "open /tmp/invalidfont.ttf: no such file or directory" {
+	if err.Error() != "Asset /tmp/invalidfont.ttf not found" {
 		t.Fatal(err)
 	}
 }
 
 func TestGetFontInvalid(t *testing.T) {
-	path := "testdata/invalidfont.ttf"
+	path := "data/testdata/invalidfont.ttf"
 	_, err := getFont(path)
 	if err.Error() != "freetype: invalid TrueType format: bad TTF version" {
 		t.Fatal(err)
