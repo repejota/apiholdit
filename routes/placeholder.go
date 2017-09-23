@@ -60,7 +60,7 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = p.SetText("Lorem ipsum dolor sit amet.")
+	err := p.SetText("Lorem ipsum dolor sit amet.")
 	if err != nil {
 		http.Error(w, "Unable set text", http.StatusInternalServerError)
 		return

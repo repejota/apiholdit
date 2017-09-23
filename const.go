@@ -38,4 +38,8 @@ var (
 	// DefaultBackgroundColor : Silver #bdc3c7
 	// http://flatuicolors.com/
 	DefaultBackgroundColor = &color.RGBA{189, 195, 199, 255}
+
+	// DefaultForegroundColor : Midnight Blue #2c3e50
+	// http://flatuicolors.com/
+	DefaultForegroundColor = &color.RGBA{44, 62, 199, 255}
 )
