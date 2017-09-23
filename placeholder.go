@@ -35,6 +35,7 @@ func NewPlaceHolder() *PlaceHolder {
 		Height:          DefaultHeight,
 		MarginRatio:     DefaultMarginRatio,
 		BackgroundColor: DefaultBackgroundColor,
+		ForegroundColor: DefaultForegroundColor,
 	}
 	return &placeholder
 }
