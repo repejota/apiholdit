@@ -5,8 +5,8 @@ package apiholdit
 import "testing"
 
 func TestNewPlaceHolder(t *testing.T) {
-	expectedWidth := uint(640)
-	expectedHeight := uint(480)
+	expectedWidth := int(640)
+	expectedHeight := int(480)
 	placeholder := NewPlaceHolder()
 	if placeholder.Width != expectedWidth {
 		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
@@ -17,28 +17,57 @@ func TestNewPlaceHolder(t *testing.T) {
 }
 
 func TestSetWidth(t *testing.T) {
-	expectedWidth := uint(640)
+	expectedWidth := int(640)
 	placeholder := NewPlaceHolder()
 	if placeholder.Width != expectedWidth {
 		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
 	}
-	newWidth := uint(1024)
-	placeholder.SetWidth(newWidth)
+	newWidth := int(1024)
+	err := placeholder.SetWidth(newWidth)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if placeholder.Width != newWidth {
 		t.Fatalf("Placeholder width expected to be %d but got %d", newWidth, placeholder.Width)
 	}
 }
 
+func TestSetWidthNegativeNumber(t *testing.T) {
+	expectedWidth := int(640)
+	placeholder := NewPlaceHolder()
+	if placeholder.Width != expectedWidth {
+		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
+	}
+	newWidth := int(-640)
+	err := placeholder.SetWidth(newWidth)
+	if err.Error() != "width must be >= 0" {
+		t.Fatalf("Expected to fail because it is a negative number but but got %s", err)
+	}
+}
+
 func TestSetHeight(t *testing.T) {
-	expectedHeight := uint(480)
+	expectedHeight := int(480)
 	placeholder := NewPlaceHolder()
 	if placeholder.Height != expectedHeight {
 		t.Fatalf("Placeholder height expected to be %d but got %d", expectedHeight, placeholder.Width)
 	}
-	newHeight := uint(768)
+	newHeight := int(768)
 	placeholder.SetHeight(newHeight)
 	if placeholder.Height != newHeight {
 		t.Fatalf("Placeholder height expected to be %d but got %d", newHeight, placeholder.Width)
+	}
+}
+
+func TestSetHeightNegativeNumber(t *testing.T) {
+	expectedWidth := int(640)
+	placeholder := NewPlaceHolder()
+	if placeholder.Width != expectedWidth {
+		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
+	}
+	newHeight := int(-768)
+	err := placeholder.SetHeight(newHeight)
+	if err.Error() != "height must be >= 0" {
+		t.Fatalf("Expected to fail because it is a negative number but but got %s", err)
 	}
 }
 

@@ -4,6 +4,7 @@ package apiholdit
 
 import (
 	"bytes"
+	"errors"
 	"image"
 	"image/color"
 	"image/draw"
@@ -18,8 +19,8 @@ import (
 
 // PlaceHolder ...
 type PlaceHolder struct {
-	Width           uint
-	Height          uint
+	Width           int
+	Height          int
 	MarginRatio     float64
 	BackgroundColor *color.RGBA
 	ForegroundColor *color.RGBA
@@ -39,7 +40,10 @@ func NewPlaceHolder() *PlaceHolder {
 
 // SetWidth sets the width of the placeholder and regenerates the canvas with
 // the new size.
-func (p *PlaceHolder) SetWidth(width uint) error {
+func (p *PlaceHolder) SetWidth(width int) error {
+	if width < 0 {
+		return errors.New("width must be >= 0")
+	}
 	p.Width = width
 	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
 	p.Canvas = image.NewRGBA(rectangle)
@@ -48,7 +52,10 @@ func (p *PlaceHolder) SetWidth(width uint) error {
 
 // SetHeight sets the height of the placeholder and regenerates the canvas with
 // the new size.
-func (p *PlaceHolder) SetHeight(height uint) error {
+func (p *PlaceHolder) SetHeight(height int) error {
+	if height < 0 {
+		return errors.New("height must be >= 0")
+	}
 	p.Height = height
 	rectangle := image.Rect(0, 0, int(p.Width), int(p.Height))
 	p.Canvas = image.NewRGBA(rectangle)
@@ -85,7 +92,7 @@ func (p *PlaceHolder) SetText(text string) error {
 
 // Render ...
 func (p *PlaceHolder) Render() error {
-	rectangle := image.Rect(0, 0, DefaultWidth, DefaultHeight)
+	rectangle := image.Rect(0, 0, p.Width, p.Height)
 	p.Canvas = image.NewRGBA(rectangle)
 
 	// Render background
@@ -148,7 +155,7 @@ func renderBackground(canvas *image.RGBA, bgcolor *color.RGBA) error {
 }
 
 // renderText ...
-func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width uint, height uint, marginratio float64, text string, fgcolor *color.RGBA) error {
+func renderText(canvas *image.RGBA, fontTTF *truetype.Font, width int, height int, marginratio float64, text string, fgcolor *color.RGBA) error {
 	rectangle := canvas.Bounds()
 
 	context := freetype.NewContext()
