@@ -42,31 +42,34 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if _, ok := queryParams["text"]; ok {
+		text := queryParams.Get("text")
+		err := p.SetText(text)
+		if err != nil {
+			http.Error(w, "Unable set text", http.StatusInternalServerError)
+			return
+		}
+	}
+
 	if _, ok := queryParams["bgcolor"]; ok {
-		bgcolorstr := r.URL.Query().Get("bgcolor")
+		bgcolorstr := queryParams.Get("bgcolor")
 		err := p.SetBackgroundColor(bgcolorstr)
 		if err != nil {
-			http.Error(w, "Invalid placeholder background color", http.StatusBadRequest)
+			http.Error(w, "Invalid placeholder background color", http.StatusInternalServerError)
 			return
 		}
 	}
 
 	if _, ok := queryParams["fgcolor"]; ok {
-		fgcolorstr := r.URL.Query().Get("fgcolor")
+		fgcolorstr := queryParams.Get("fgcolor")
 		err := p.SetForegroundColor(fgcolorstr)
 		if err != nil {
-			http.Error(w, "Invalid placeholder foreground color", http.StatusBadRequest)
+			http.Error(w, "Invalid placeholder foreground color", http.StatusInternalServerError)
 			return
 		}
 	}
 
-	err := p.SetText("Lorem ipsum dolor sit amet.")
-	if err != nil {
-		http.Error(w, "Unable set text", http.StatusInternalServerError)
-		return
-	}
-
-	err = p.Render()
+	err := p.Render()
 	if err != nil {
 		http.Error(w, "Unable to render image", http.StatusInternalServerError)
 		return

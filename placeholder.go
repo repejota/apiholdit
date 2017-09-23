@@ -21,11 +21,11 @@ import (
 type PlaceHolder struct {
 	Width           int
 	Height          int
+	Text            string
 	MarginRatio     float64
 	BackgroundColor *color.RGBA
 	ForegroundColor *color.RGBA
 	Canvas          *image.RGBA
-	Text            string
 }
 
 // NewPlaceHolder ...
@@ -33,6 +33,7 @@ func NewPlaceHolder() *PlaceHolder {
 	placeholder := PlaceHolder{
 		Width:           DefaultWidth,
 		Height:          DefaultHeight,
+		Text:            DefaultText,
 		MarginRatio:     DefaultMarginRatio,
 		BackgroundColor: DefaultBackgroundColor,
 		ForegroundColor: DefaultForegroundColor,
@@ -64,6 +65,12 @@ func (p *PlaceHolder) SetHeight(height int) error {
 	return nil
 }
 
+// SetText ...
+func (p *PlaceHolder) SetText(text string) error {
+	p.Text = text
+	return nil
+}
+
 // SetBackgroundColor ...
 func (p *PlaceHolder) SetBackgroundColor(bgcolor string) error {
 	var col *color.RGBA
@@ -83,12 +90,6 @@ func (p *PlaceHolder) SetForegroundColor(fgcolor string) error {
 		return err
 	}
 	p.ForegroundColor = col
-	return nil
-}
-
-// SetText ...
-func (p *PlaceHolder) SetText(text string) error {
-	p.Text = text
 	return nil
 }
 
