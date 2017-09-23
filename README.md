@@ -13,7 +13,11 @@
 
 ## Introduction
 
-apiholdit ...
+APIholdit is a drop-in and easy to deploy microservice who exposes an HTTP API you can use to generate placeholder images with a desired text.
+
+For example:
+
+![psh screenshot](https://github.com/repejota/apiholdit/raw/develop/placeholder-example-1.png "placehoder example")
 
 ## Continuous integration
 
