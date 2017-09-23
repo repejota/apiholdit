@@ -5,8 +5,8 @@ package apiholdit
 import "testing"
 
 func TestNewPlaceHolder(t *testing.T) {
-	expectedWidth := int(640)
-	expectedHeight := int(480)
+	expectedWidth := DefaultWidth
+	expectedHeight := DefaultHeight
 	placeholder := NewPlaceHolder()
 	if placeholder.Width != expectedWidth {
 		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
@@ -20,7 +20,7 @@ func TestNewPlaceHolder(t *testing.T) {
 }
 
 func TestSetWidth(t *testing.T) {
-	expectedWidth := int(640)
+	expectedWidth := DefaultWidth
 	placeholder := NewPlaceHolder()
 	if placeholder.Width != expectedWidth {
 		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
@@ -36,7 +36,7 @@ func TestSetWidth(t *testing.T) {
 }
 
 func TestSetWidthNegativeNumber(t *testing.T) {
-	expectedWidth := int(640)
+	expectedWidth := DefaultWidth
 	placeholder := NewPlaceHolder()
 	if placeholder.Width != expectedWidth {
 		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
@@ -49,7 +49,7 @@ func TestSetWidthNegativeNumber(t *testing.T) {
 }
 
 func TestSetHeight(t *testing.T) {
-	expectedHeight := int(480)
+	expectedHeight := DefaultHeight
 	placeholder := NewPlaceHolder()
 	if placeholder.Height != expectedHeight {
 		t.Fatalf("Placeholder height expected to be %d but got %d", expectedHeight, placeholder.Width)
@@ -62,10 +62,10 @@ func TestSetHeight(t *testing.T) {
 }
 
 func TestSetHeightNegativeNumber(t *testing.T) {
-	expectedWidth := int(640)
+	expectedHeight := DefaultHeight
 	placeholder := NewPlaceHolder()
-	if placeholder.Width != expectedWidth {
-		t.Fatalf("Placeholder width expected to be %d but got %d", expectedWidth, placeholder.Width)
+	if placeholder.Height != expectedHeight {
+		t.Fatalf("Placeholder height expected to be %d but got %d", expectedHeight, placeholder.Height)
 	}
 	newHeight := int(-768)
 	err := placeholder.SetHeight(newHeight)

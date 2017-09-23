@@ -73,7 +73,6 @@ func (p *PlaceHolder) SetText(text string) error {
 
 // SetBackgroundColor ...
 func (p *PlaceHolder) SetBackgroundColor(bgcolor string) error {
-	var col *color.RGBA
 	col, err := getColor(bgcolor)
 	if err != nil {
 		return err
@@ -84,7 +83,6 @@ func (p *PlaceHolder) SetBackgroundColor(bgcolor string) error {
 
 // SetForegroundColor ...
 func (p *PlaceHolder) SetForegroundColor(fgcolor string) error {
-	var col *color.RGBA
 	col, err := getColor(fgcolor)
 	if err != nil {
 		return err
