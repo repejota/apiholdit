@@ -6,11 +6,16 @@ PACKAGES = "./..."
 # values
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
-install:
+.PHONY: prebuild
+prebuild:
+	go-bindata -o data.go data/...
+
+.PHONY: install
+install: prebuild
 	go install $(LDFLAGS) -v $(PACKAGES)
 
 .PHONY: build
-build:
+build: prebuild
 	go build $(LDFLAGS) -v $(PACKAGES)
 
 .PHONY: version
@@ -20,6 +25,7 @@ version:
 .PHONY: clean
 clean:
 	go clean
+	rm -rf data.go
 	rm -rf coverage-all.out
 
 # Testing

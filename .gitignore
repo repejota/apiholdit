@@ -13,3 +13,5 @@
 .vscode/
 
 coverage-all.out
+
+data.go
