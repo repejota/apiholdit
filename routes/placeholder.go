@@ -42,15 +42,17 @@ func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	bgcolorstr := r.URL.Query().Get("bgcolor")
-	err := p.SetBackgroundColor(bgcolorstr)
-	if err != nil {
-		http.Error(w, "Invalid placeholder background color", http.StatusBadRequest)
-		return
+	if _, ok := queryParams["bgcolor"]; ok {
+		bgcolorstr := r.URL.Query().Get("bgcolor")
+		err := p.SetBackgroundColor(bgcolorstr)
+		if err != nil {
+			http.Error(w, "Invalid placeholder background color", http.StatusBadRequest)
+			return
+		}
 	}
 
 	fgcolorstr := r.URL.Query().Get("fgcolor")
-	err = p.SetForegroundColor(fgcolorstr)
+	err := p.SetForegroundColor(fgcolorstr)
 	if err != nil {
 		http.Error(w, "Invalid placeholder foreground color", http.StatusBadRequest)
 		return

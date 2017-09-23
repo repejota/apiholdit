@@ -2,6 +2,8 @@
 
 package apiholdit
 
+import "image/color"
+
 const (
 	// DefaultServerAddress is the default hostname where the server is going
 	// to be started and listening.
@@ -30,4 +32,10 @@ const (
 	// DefaultMaxFontSize is the maximum size of the font that will be used to
 	// render the placeholder text.
 	DefaultMaxFontSize = 512.00
+)
+
+var (
+	// DefaultBackgroundColor : Silver #bdc3c7
+	// http://flatuicolors.com/
+	DefaultBackgroundColor = &color.RGBA{189, 195, 199, 255}
 )
