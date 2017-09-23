@@ -2,7 +2,9 @@
 
 package apiholdit
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestGetFont(t *testing.T) {
 	_, err := getFont()
