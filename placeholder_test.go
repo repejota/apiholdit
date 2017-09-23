@@ -71,6 +71,13 @@ func TestSetHeightNegativeNumber(t *testing.T) {
 	}
 }
 
+func TestSetText(t *testing.T) {
+	placeholder := NewPlaceHolder()
+	if placeholder.Text != DefaultText {
+		t.Fatalf("Placehooder text expected to be %s but bot %s", DefaultText, placeholder.Text)
+	}
+}
+
 func TestSetBgColor(t *testing.T) {
 	placeholder := NewPlaceHolder()
 	err := placeholder.SetBackgroundColor("ff0000")
