@@ -28,3 +28,15 @@ func TestGetFontInvalid(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestGetFontScaledSize(t *testing.T) {
+	expectedScaledWidth := 512
+	expectedScaledHeight := 384
+	scaledWidth, scaledHeight := getFontScaledSize(DefaultWidth, DefaultHeight, DefaultMarginRatio)
+	if scaledWidth != expectedScaledWidth {
+		t.Fatalf("Text scaledWith expected to be %d but got %d", expectedScaledWidth, scaledWidth)
+	}
+	if scaledHeight != expectedScaledHeight {
+		t.Fatalf("Text scaledHeight expected to be %d but got %d", expectedScaledHeight, scaledHeight)
+	}
+}
