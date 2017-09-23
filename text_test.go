@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetFont(t *testing.T) {
-	_, err := getFont(DefaultFontPath)
+	_, err := getFont("testdata/Roboto-Black.ttf")
 	if err != nil {
 		t.Fatal(err)
 	}
