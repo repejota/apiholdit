@@ -7,6 +7,8 @@
 
 * [Introduction](https://github.com/repejota/apiholdit#introduction)
 * [User Documentation](https://github.com/repejota/apiholdit#user-documentation)
+	* [Query Parameters](https://github.com/repejota/apiholdit#query-parameters)
+	* [Examples](https://github.com/repejota/apiholdit#examples)
 * [Developer Documentation](https://github.com/repejota/apiholdit#developer-documentation)
 * [Continuous Integration](https://github.com/repejota/apiholdit#continuous-integration)
   * [Tests](https://github.com/repejota/apiholdit#license)
@@ -23,9 +25,80 @@ For example:
 
 ## User Documentation
 
-Documentation for users
+The main entry point for the REST API is the following URL:
 
-## User Documentation
+```
+http://<host>:<port>/i
+```
+
+### URL Parameters
+
+This URL accept the following parameters:
+
+#### Width
+
+`width` of the placeholder image in pixels. By default is `640` pixels.
+
+Example:
+
+```
+curl http://<host>:<port>/i?width=1024 -o placeholder.png
+```
+
+#### Height
+
+`height` of the placeholder image in pixels. By default is `480` pixels.
+
+Example:
+
+```
+curl http://<host>:<port>/i?height=768 -o placeholder.png
+```
+
+#### Text
+
+`text` defines the placeholder text that will appear autoscaled and centered on the placeholdwr image.
+
+This text should be encoded to allow special characters and by default is the string `Placeholder`.
+
+Example:
+
+```
+curl http://<host>:<port>/i?text=Lorem%20ipsum%20dolor%20sit%20amet -o placeholder.png
+```
+
+#### Background color
+
+`bgcolor` sets the background color to be used to render the placeholder image. By default is the color called *Silver* from the [FlatUIColors](http://flatuicolors.com/) color palette. And its code is `#bdc3c7`.
+
+Example:
+
+```
+curl http://<host>:<port>/i?bgcolor=bdc3c7 -o placeholder.png
+```
+
+#### Foreground color
+
+`fgcolor` sets the foreground color, or the color being used to draw the text on the placeholder image. By default is the color called *Midnight Blue* from the [FlatUIColors](http://flatuicolors.com/) color palette. And its code is `#2c3e50`.
+
+Example:
+
+```
+curl http://<host>:<port>/i?fgcolor=2c3e50 -o placeholder.png
+```
+
+### Examples
+
+Here are a few eamples using the previous defined API:
+
+
+| URL           | Placeholdwer           |
+| ------------- |:-------------:|
+| http://example.com/i?width=320&height=200      | ![psh screenshot](https://github.com/repejota/apiholdit/raw/develop/placeholder-example-2.png "placehoder example")  |
+| http://example.com/i?width=320&height=200&text=placeholder-text      | ![psh screenshot](https://github.com/repejota/apiholdit/raw/develop/placeholder-example-3.png "placehoder example")      |
+| http://example.com/i?width=320&height=200&text=placeholder-text&bgcolor=c0392b&fgcolor=2980b9 | ![psh screenshot](https://github.com/repejota/apiholdit/raw/develop/placeholder-example-4.png "placehoder example")      |
+
+## Developer Documentation
 
 Documentation for developers
 
