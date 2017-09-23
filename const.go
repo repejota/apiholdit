@@ -35,6 +35,9 @@ const (
 
 	// DefaultText is the default text to be rendered.
 	DefaultText = "Placeholder"
+
+	// DefaultFontPath ...
+	DefaultFontPath = "/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf"
 )
 
 var (

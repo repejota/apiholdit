@@ -10,10 +10,8 @@ import (
 )
 
 // getFont ...
-func getFont() (*truetype.Font, error) {
-	fontPath := "/Users/raul/go/src/github.com/repejota/apiholdit/contrib/Roboto-Black.ttf"
-
-	ttf, err := ioutil.ReadFile(fontPath)
+func getFont(path string) (*truetype.Font, error) {
+	ttf, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
