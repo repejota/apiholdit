@@ -12,33 +12,38 @@ import (
 // PlaceHolder generates an image placeholder.
 func PlaceHolder(w http.ResponseWriter, r *http.Request) {
 	p := apiholdit.NewPlaceHolder()
+	queryParams := r.URL.Query()
 
-	widthstr := r.URL.Query().Get("width")
-	width, err := strconv.Atoi(widthstr)
-	if err != nil {
-		http.Error(w, "Invalid placeholder width", http.StatusBadRequest)
-		return
-	}
-	err = p.SetWidth(width)
-	if err != nil {
-		http.Error(w, "Invalid placeholder width", http.StatusInternalServerError)
-		return
+	if _, ok := queryParams["width"]; ok {
+		widthstr := queryParams.Get("width")
+		width, err := strconv.Atoi(widthstr)
+		if err != nil {
+			http.Error(w, "Invalid placeholder width", http.StatusBadRequest)
+			return
+		}
+		err = p.SetWidth(width)
+		if err != nil {
+			http.Error(w, "Invalid placeholder width", http.StatusInternalServerError)
+			return
+		}
 	}
 
-	heightstr := r.URL.Query().Get("height")
-	height, err := strconv.Atoi(heightstr)
-	if err != nil {
-		http.Error(w, "Invalid placeholder height", http.StatusBadRequest)
-		return
-	}
-	err = p.SetHeight(height)
-	if err != nil {
-		http.Error(w, "Invalid placeholder height", http.StatusInternalServerError)
-		return
+	if _, ok := queryParams["height"]; ok {
+		heightstr := queryParams.Get("height")
+		height, err := strconv.Atoi(heightstr)
+		if err != nil {
+			http.Error(w, "Invalid placeholder height", http.StatusBadRequest)
+			return
+		}
+		err = p.SetHeight(height)
+		if err != nil {
+			http.Error(w, "Invalid placeholder height", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	bgcolorstr := r.URL.Query().Get("bgcolor")
-	err = p.SetBackgroundColor(bgcolorstr)
+	err := p.SetBackgroundColor(bgcolorstr)
 	if err != nil {
 		http.Error(w, "Invalid placeholder background color", http.StatusBadRequest)
 		return
