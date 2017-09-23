@@ -32,6 +32,9 @@ const (
 	// DefaultMaxFontSize is the maximum size of the font that will be used to
 	// render the placeholder text.
 	DefaultMaxFontSize = 512.00
+
+	// DefaultText is the default text to be rendered.
+	DefaultText = "Placeholder"
 )
 
 var (
