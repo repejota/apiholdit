@@ -1,0 +1,6 @@
+{
+    "name": "APIHoldit",
+    "description": "APIholdit is a drop-in and easy to deploy microservice who exposes an HTTP API you can use to generate placeholder images with a desired text, automatically centered and scaled.",
+    "repository": "https://github.com/repejota/apiholdit",
+    "keywords": ["microservice", "http", "api", "golang", "json", "server", "image", "placeholder", "design", "mockup"]
+  }
