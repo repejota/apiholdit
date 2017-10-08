@@ -80,7 +80,11 @@ Here are a few eamples using the previous defined API:
 
 ## Developer Documentation
 
-Documentation for developers
+### Deployment
+
+You can also deploy *APIHoldit* on Heroku with this one click button:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Continuous integration
 

@@ -12,8 +12,13 @@
 
 .vscode/
 
+vendor/*/
+
 coverage-all.out
 
 data.go
 
 .DS_Store
+
+apiholdit
+
